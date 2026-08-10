@@ -625,13 +625,6 @@
                 `).join('')}
               </select>
             </label>
-            <div class="map-statistic-control">
-              <span>Ward level</span>
-              <div class="level-toggle" role="group" aria-label="Ward groundwater statistic">
-                <button type="button" class="${wardLevelStatistic === 'average' ? 'active' : ''}" data-global-ward-level-stat="average">Average</button>
-                <button type="button" class="${wardLevelStatistic === 'median' ? 'active' : ''}" data-global-ward-level-stat="median">Median</button>
-              </div>
-            </div>
           ` : ''}
         </div>
         <div class="method-note">${htmlEscape(lensNote)} Select the count to filter the map.</div>
