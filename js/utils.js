@@ -583,8 +583,8 @@
           <div class="map-status-counts" aria-label="Ward status counts">
             <button type="button" data-method-status-filter="critical" title="Filter critical wards"><i style="background:${mapLensCriticalColor()}"></i>${formatNumber(counts.critical)}</button>
             ${wardAnalysisLens === 'groundwater' ? `
-              <button type="button" data-method-status-filter="rise" title="Filter groundwater rise wards"><i style="background:#0891b2"></i>${formatNumber(counts.rise)}</button>
-              <button type="button" data-method-status-filter="stable" title="Filter analysed wards that are not critical or rising"><i style="background:#d97706"></i>${formatNumber(counts.stable)}</button>
+              <button type="button" data-method-status-filter="rise" title="Filter groundwater rise wards"><i style="background:#065f46"></i>${formatNumber(counts.rise)}</button>
+              <button type="button" data-method-status-filter="stable" title="Filter analysed wards that are not critical or rising"><i style="background:#eab308"></i>${formatNumber(counts.stable)}</button>
             ` : ''}
             ${wardAnalysisLens !== 'groundwater' && wardAnalysisLens !== 'consumption' ? `
               <button type="button" data-method-status-filter="stable" title="Filter wards below this lens threshold"><i style="background:#94a3b8"></i>${formatNumber(counts.stable)}</button>

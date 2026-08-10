@@ -682,11 +682,11 @@ let hoveredLayer = null;
         <button class="legend-row" data-filter="water" type="button"><span class="dot" style="background:#1d4ed8"></span>WL only</button>
         <button class="legend-row" data-filter="none" type="button"><span class="dot" style="background:#d12f2f"></span>No data</button>
         <div class="legend-title legend-title-spaced">Ward status</div>
-        <button class="legend-row" data-ward-filter="critical" type="button"><span class="swatch" style="background:#b91c1c"></span><span data-ward-legend-label="critical">Critical: GW Decline</span></button>
-        <button class="legend-row" data-ward-filter="rise" type="button"><span class="swatch" style="background:#087f8c"></span><span data-ward-legend-label="rise">Groundwater Rise</span></button>
-        <button class="legend-row" data-ward-filter="stable" type="button"><span class="swatch" style="background:#c66a00"></span><span data-ward-legend-label="stable">Stable</span></button>
+        <button class="legend-row" data-ward-filter="critical" type="button"><span class="swatch" style="background:#7f1d1d"></span><span data-ward-legend-label="critical">Critical: GW Decline</span></button>
+        <button class="legend-row" data-ward-filter="rise" type="button"><span class="swatch" style="background:#065f46"></span><span data-ward-legend-label="rise">Groundwater Rise</span></button>
+        <button class="legend-row" data-ward-filter="stable" type="button"><span class="swatch" style="background:#eab308"></span><span data-ward-legend-label="stable">Stable</span></button>
         <div class="legend-note" data-ward-legend-note>
-          Red, teal, and amber fills show final mapped groundwater status. Wards without usable trend evidence are left unfilled.
+          Red, green, and yellow fills show final mapped groundwater status. Wards without usable trend evidence are left unfilled.
         </div>
       `;
       return div;
@@ -702,7 +702,7 @@ let hoveredLayer = null;
       const legendNote = document.querySelector('[data-ward-legend-note]');
       if (legendNote) {
         legendNote.textContent = wardAnalysisLens === 'groundwater'
-          ? 'Red, teal, and amber fills show groundwater decline, rise, and near-flat stable status. Mixed or unclassified wards are left unfilled.'
+          ? 'Red, green, and yellow fills show groundwater decline, rise, and near-flat stable status. Mixed or unclassified wards are left unfilled.'
           : `${wardAnalysisLensLabel()} is shown as ${mapLensCriticalColor()} fill. Wards not meeting this lens threshold are left unfilled.`;
       }
       document.querySelectorAll('.legend button[data-filter]').forEach((button) => {

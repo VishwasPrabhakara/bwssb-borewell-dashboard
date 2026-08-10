@@ -846,12 +846,12 @@
         };
       } else if (currentDataSource === 'kh' && key === 'stable') {
         style = {
-          color: '#1e3a8a',
+          color: '#854d0e',
           weight: 2.5,
           opacity: 0.95,
           fill: true,
-          fillColor: '#1e40af',
-          fillOpacity: 0.78
+          fillColor: '#eab308',
+          fillOpacity: 0.82
         };
       }
       return isFocused ? focusedWardStyle(style) : style;
