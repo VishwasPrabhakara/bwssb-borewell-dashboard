@@ -1160,8 +1160,8 @@
           const onX = startTimestamp(point);
           const offX = stopTimestamp(point);
           return [
-            { x: onX, y: point.offLevel, label: label(onX, 'ON') },
-            { x: offX, y: point.onLevel, label: label(offX, 'OFF') }
+            { x: onX, y: point.onLevel, label: label(onX, 'ON') },
+            { x: offX, y: point.offLevel, label: label(offX, 'OFF') }
           ];
         });
       }
@@ -1171,7 +1171,7 @@
         .map((point) => ({ x: stopTimestamp(point), y: point.primary, label: label(stopTimestamp(point)) }));
     };
     const sessionLevelPointData = (points, cleanedSet, semantic) => {
-      const key = semantic === 'on' ? 'offLevel' : 'onLevel';
+      const key = semantic === 'on' ? 'onLevel' : 'offLevel';
       return levelPointData(points, cleanedSet, key, semantic);
     };
     const levelPointData = (points, cleanedSet, key, semantic = '') => {

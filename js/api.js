@@ -303,8 +303,11 @@
     const cleanChartPointGroups = (rawPoints) => {
       const normalized = rawPoints.map((point) => {
         const waterLevel = validChartLevel(point.waterLevel) ? Number(point.waterLevel) : null;
-        const offLevel = validChartLevel(point.offLevel) ? Number(point.offLevel) : null;
-        const onLevel = validChartLevel(point.onLevel) ? Number(point.onLevel) : null;
+        let offLevel = validChartLevel(point.offLevel) ? Number(point.offLevel) : null;
+        let onLevel = validChartLevel(point.onLevel) ? Number(point.onLevel) : null;
+        if (Number.isFinite(onLevel) && Number.isFinite(offLevel) && onLevel > offLevel) {
+          [onLevel, offLevel] = [offLevel, onLevel];
+        }
         const primary = onLevel ?? waterLevel ?? offLevel;
         return { ...point, waterLevel, offLevel, onLevel, primary };
       }).filter((point) => point.primary != null && point.time)

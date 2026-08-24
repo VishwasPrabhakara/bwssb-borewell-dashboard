@@ -241,7 +241,7 @@
           ? `<div class="ward-note">${formatNumber(capacityDiagnostics.sensorsWithoutValidSpecificCapacity)} sensor(s) in this ward have both water-level and discharge data, but were not used because no valid pumping session was found with positive duration, positive drawdown, and discharge inside the pumping period.${skippedCapacityReasons ? `<br><br>${skippedCapacityReasons}` : ''}</div>`
           : '')
         : (Number(capacityDiagnostics.candidateSensorsWithWaterAndDischarge || 0) > 0
-          ? `<div class="ward-note">This ward has ${formatNumber(capacityDiagnostics.candidateSensorsWithWaterAndDischarge)} sensor(s) with both water-level and discharge data, but specific capacity cannot be calculated because no valid OFF-to-ON pumping session was found with positive duration, positive drawdown, and discharge during the pumping period.${skippedCapacityReasons ? `<br><br>${skippedCapacityReasons}` : ''}</div>`
+        ? `<div class="ward-note">This ward has ${formatNumber(capacityDiagnostics.candidateSensorsWithWaterAndDischarge)} sensor(s) with both water-level and discharge data, but specific capacity cannot be calculated because no valid ON-to-OFF pumping session was found with positive duration, positive drawdown, and discharge during the pumping period.${skippedCapacityReasons ? `<br><br>${skippedCapacityReasons}` : ''}</div>`
           : '<div class="ward-note">Specific capacity is not available in the API response for this ward. This may be an API/cache issue if the downloaded Excel shows valid sessions.</div>');
       const capacityPanels = capacitySensors.map((sensor, index) => {
         const uid = String(sensor.uid);
