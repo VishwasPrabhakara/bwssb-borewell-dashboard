@@ -436,7 +436,7 @@
       return criticalForWardNo(wardNo)?.updateReason || 'Groundwater status uses the selected cleaned weekly trend method.';
     };
 
-    const mapLensCriticalColor = () => '#7f1d1d';
+    const mapLensCriticalColor = () => '#450a0a';
 
     const mapLensCriticalLabel = () => ({
       groundwater: 'Critical: GW Decline',
@@ -828,7 +828,7 @@
       let style = neutralWardStyle();
       if (currentDataSource === 'kh' && key === 'critical') {
         style = {
-          color: '#450a0a',
+          color: '#1f0505',
           weight: 2.5,
           opacity: 1,
           fill: true,
@@ -841,17 +841,17 @@
           weight: 2.5,
           opacity: 1,
           fill: true,
-          fillColor: '#065f46',
-          fillOpacity: 0.82
+          fillColor: '#022c22',
+          fillOpacity: 0.9
         };
       } else if (currentDataSource === 'kh' && key === 'stable') {
         style = {
-          color: '#854d0e',
+          color: '#713f12',
           weight: 2.5,
           opacity: 0.95,
           fill: true,
-          fillColor: '#eab308',
-          fillOpacity: 0.82
+          fillColor: '#a16207',
+          fillOpacity: 0.88
         };
       }
       return isFocused ? focusedWardStyle(style) : style;

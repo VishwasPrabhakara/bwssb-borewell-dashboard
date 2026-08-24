@@ -177,7 +177,7 @@ let hoveredLayer = null;
           color: 'rgba(0,0,0,0.62)',
           weight: 1.5,
           opacity: 1,
-          fillColor: '#38a9dc',
+          fillColor: '#003b8f',
           fillOpacity: 0.38
         },
         onEachFeature: (feature, layer) => {
@@ -678,12 +678,12 @@ let hoveredLayer = null;
       L.DomEvent.disableClickPropagation(div);
       div.innerHTML = `
         <div class="legend-title">Sensor data</div>
-        <button class="legend-row" data-filter="both" type="button"><span class="dot" style="background:#00b8d9"></span>WL + discharge</button>
-        <button class="legend-row" data-filter="none" type="button"><span class="dot" style="background:#111827"></span>No data</button>
+        <button class="legend-row" data-filter="both" type="button"><span class="dot" style="background:#003b8f"></span>WL + discharge</button>
+        <button class="legend-row" data-filter="none" type="button"><span class="dot" style="background:#020617"></span>No data</button>
         <div class="legend-title legend-title-spaced">Ward status</div>
-        <button class="legend-row" data-ward-filter="critical" type="button"><span class="swatch" style="background:#7f1d1d"></span><span data-ward-legend-label="critical">Critical: GW Decline</span></button>
-        <button class="legend-row" data-ward-filter="rise" type="button"><span class="swatch" style="background:#065f46"></span><span data-ward-legend-label="rise">Groundwater Rise</span></button>
-        <button class="legend-row" data-ward-filter="stable" type="button"><span class="swatch" style="background:#eab308"></span><span data-ward-legend-label="stable">Stable / below threshold</span></button>
+        <button class="legend-row" data-ward-filter="critical" type="button"><span class="swatch" style="background:#450a0a"></span><span data-ward-legend-label="critical">Critical: GW Decline</span></button>
+        <button class="legend-row" data-ward-filter="rise" type="button"><span class="swatch" style="background:#022c22"></span><span data-ward-legend-label="rise">Groundwater Rise</span></button>
+        <button class="legend-row" data-ward-filter="stable" type="button"><span class="swatch" style="background:#a16207"></span><span data-ward-legend-label="stable">Stable / below threshold</span></button>
         <div class="legend-note" data-ward-legend-note>
           Red, green, and yellow fills show final mapped groundwater status. Wards without usable trend evidence are left unfilled.
         </div>
