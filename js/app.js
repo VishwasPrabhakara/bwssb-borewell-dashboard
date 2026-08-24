@@ -703,13 +703,13 @@ let hoveredLayer = null;
       if (riseLegendLabel) riseLegendLabel.textContent = 'Groundwater Rise';
       if (stableLegendLabel) {
         stableLegendLabel.textContent = wardAnalysisLens === 'groundwater'
-          ? 'Stable groundwater trend'
+          ? `Stable groundwater trend (|slope| ≤ ${LINEAR_DECLINE_THRESHOLD_FT_PER_WEEK} ft/week)`
           : 'Below selected threshold';
       }
       const legendNote = document.querySelector('[data-ward-legend-note]');
       if (legendNote) {
         legendNote.textContent = wardAnalysisLens === 'groundwater'
-          ? 'Red = selected groundwater decline method marks the ward critical. Green = groundwater depth is reducing/rising. Yellow = enough data exists and the trend is near-flat/stable. Unfilled = mixed, unclassified, or insufficient evidence.'
+          ? `Red = selected groundwater decline method marks the ward critical. Green = groundwater depth is reducing/rising. Yellow = enough data exists and the trend is near-flat/stable within ±${LINEAR_DECLINE_THRESHOLD_FT_PER_WEEK} ft/week. Unfilled = mixed, unclassified, or insufficient evidence.`
           : `Red = ward meets the selected ${wardAnalysisLensLabel()} critical threshold. Yellow = ward has data for this lens but does not meet the critical threshold. Unfilled = no usable data for this lens.`;
       }
       document.querySelectorAll('.legend button[data-filter]').forEach((button) => {
