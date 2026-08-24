@@ -16,10 +16,10 @@
     };
 
     const dataCategoryColors = {
-      both: '#007a3d',
+      both: '#00b8d9',
       water: '#1d4ed8',
       discharge: '#d12f2f',
-      none: '#d12f2f'
+      none: '#111827'
     };
 
     const qcStatusLabels = {

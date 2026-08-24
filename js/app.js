@@ -678,9 +678,8 @@ let hoveredLayer = null;
       L.DomEvent.disableClickPropagation(div);
       div.innerHTML = `
         <div class="legend-title">Sensor data</div>
-        <button class="legend-row" data-filter="both" type="button"><span class="dot" style="background:#007a3d"></span>WL + discharge</button>
-        <button class="legend-row" data-filter="water" type="button"><span class="dot" style="background:#1d4ed8"></span>WL only</button>
-        <button class="legend-row" data-filter="none" type="button"><span class="dot" style="background:#d12f2f"></span>No data</button>
+        <button class="legend-row" data-filter="both" type="button"><span class="dot" style="background:#00b8d9"></span>WL + discharge</button>
+        <button class="legend-row" data-filter="none" type="button"><span class="dot" style="background:#111827"></span>No data</button>
         <div class="legend-title legend-title-spaced">Ward status</div>
         <button class="legend-row" data-ward-filter="critical" type="button"><span class="swatch" style="background:#7f1d1d"></span><span data-ward-legend-label="critical">Critical: GW Decline</span></button>
         <button class="legend-row" data-ward-filter="rise" type="button"><span class="swatch" style="background:#065f46"></span><span data-ward-legend-label="rise">Groundwater Rise</span></button>
