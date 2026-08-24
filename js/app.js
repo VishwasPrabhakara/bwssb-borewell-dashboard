@@ -692,6 +692,16 @@ let hoveredLayer = null;
     };
     legend.addTo(map);
 
+    const selectedLensThresholdText = () => {
+      if (wardAnalysisLens === 'groundwater') return `|slope| ≤ ${LINEAR_DECLINE_THRESHOLD_FT_PER_WEEK} ft/week`;
+      if (wardAnalysisLens === 'overall') return `active in < ${commonLensCount}/5 lenses`;
+      if (wardAnalysisLens === 'volumetric_deficit') return '< 10 ML groundwater storage loss';
+      if (wardAnalysisLens === 'extraction') return `< ${formatNumber(pumpingPerformanceWardThresholds.extractionP75M3, 0)} m3 pumped volume`;
+      if (wardAnalysisLens === 'specific_capacity') return `> ${formatNumber(pumpingPerformanceWardThresholds.specificCapacityP25Scaled, 4)} x10^-6 m2/s`;
+      if (wardAnalysisLens === 'pumping_stress') return `< ${formatNumber(pumpingPerformanceWardThresholds.normalizedDrawdownP75FtPerM3, 2)} ft/m3`;
+      return 'below selected threshold';
+    };
+
     const updateLegendFilterUi = () => {
       const criticalLegendButton = document.querySelector('.legend button[data-ward-filter="critical"]');
       const criticalLegendSwatch = criticalLegendButton?.querySelector('.swatch');
@@ -703,8 +713,8 @@ let hoveredLayer = null;
       if (riseLegendLabel) riseLegendLabel.textContent = 'Groundwater Rise';
       if (stableLegendLabel) {
         stableLegendLabel.textContent = wardAnalysisLens === 'groundwater'
-          ? `Stable groundwater trend (|slope| ≤ ${LINEAR_DECLINE_THRESHOLD_FT_PER_WEEK} ft/week)`
-          : 'Below selected threshold';
+          ? `Stable groundwater trend (${selectedLensThresholdText()})`
+          : `Below threshold (${selectedLensThresholdText()})`;
       }
       const legendNote = document.querySelector('[data-ward-legend-note]');
       if (legendNote) {
