@@ -83,8 +83,9 @@ let wardLevelStatistic = 'average';
 let fullscreenChart = null;
 let fullscreenSource = null;
 let selectionSequence = 0;
-let legendFilter = '';
+let legendFilter = 'both';
 let qcFilter = '';
+let reviewReasonFilter = '';
 
 const els = {
   refreshStatus: document.getElementById('refreshStatus'),
@@ -98,6 +99,7 @@ const els = {
   withoutDataCount: document.getElementById('withoutDataCount'),
   goodQcCount: document.getElementById('goodQcCount'),
   reviewQcCount: document.getElementById('reviewQcCount'),
+  reviewQcBreakdown: document.getElementById('reviewQcBreakdown'),
   wardSensorCount: document.getElementById('wardSensorCount'),
   specificCapacityCount: document.getElementById('specificCapacityCount'),
   filteredCount: document.getElementById('filteredCount'),

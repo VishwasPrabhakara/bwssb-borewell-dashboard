@@ -1898,6 +1898,63 @@ button.primary:hover:not(:disabled) {
   background: #fff;
 }
 
+.qc-review-breakdown {
+  padding: 0 16px 12px;
+  background: #f9fbfc;
+  border-bottom: 1px solid var(--border);
+}
+
+.review-qc-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.review-qc-heading strong {
+  font-size: 12px;
+}
+
+.review-qc-heading span {
+  color: var(--muted);
+  font-size: 11px;
+  text-align: right;
+}
+
+.review-qc-reasons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.review-qc-reasons button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 34px;
+  padding: 7px 8px;
+  border: 1px solid #d5dde6;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.review-qc-reasons button.active,
+.review-qc-reasons button:hover {
+  border-color: #111827;
+  background: #111827;
+  color: #fff;
+}
+
+.review-qc-reasons button strong {
+  font-size: 13px;
+}
+
 .filter-summary > .stat {
   display: flex;
   align-items: baseline;

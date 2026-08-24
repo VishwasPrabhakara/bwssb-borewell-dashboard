@@ -692,6 +692,15 @@ let hoveredLayer = null;
     };
     legend.addTo(map);
 
+    document.querySelectorAll('.legend button[data-filter]').forEach((button) => {
+      button.addEventListener('click', () => {
+        legendFilter = legendFilter === button.dataset.filter ? '' : button.dataset.filter;
+        updateLegendFilterUi();
+        renderSensors();
+        fitSensors();
+      });
+    });
+
     const selectedLensThresholdText = () => {
       if (wardAnalysisLens === 'groundwater') return `|slope| ≤ ${LINEAR_DECLINE_THRESHOLD_FT_PER_WEEK} ft/week`;
       if (wardAnalysisLens === 'overall') return `active in < ${commonLensCount}/5 lenses`;
@@ -804,6 +813,7 @@ let hoveredLayer = null;
     document.querySelectorAll('button[data-qc-filter]').forEach((button) => {
       button.addEventListener('click', () => {
         qcFilter = button.dataset.qcFilter || '';
+        reviewReasonFilter = '';
         updateQcFilterUi();
         renderSensors();
         fitSensors();

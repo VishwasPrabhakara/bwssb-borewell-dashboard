@@ -53,6 +53,55 @@
       const className = qcStatusClass[status] || 'unknown';
       return `<span class="qc-badge ${className}">${label}</span>`;
     };
+    const reviewQcReasonDefinitions = [
+      {
+        key: 'low_coverage',
+        label: 'Low coverage',
+        help: 'Coverage score below 80',
+        matches: (sensor) => Number(qcForSensor(sensor)?.coverageScore) < 80
+      },
+      {
+        key: 'stale',
+        label: 'Stale data',
+        help: 'Last data is older than 14 days',
+        matches: (sensor) => Number(qcForSensor(sensor)?.staleDataDays) > 14
+      },
+      {
+        key: 'long_gaps',
+        label: 'Long gaps',
+        help: 'Large missing periods in the series',
+        matches: (sensor) => (qcForSensor(sensor)?.flags || []).includes('LONG_GAPS')
+      },
+      {
+        key: 'spikes',
+        label: 'Jumps/spikes',
+        help: 'Sudden jumps or drops flagged',
+        matches: (sensor) => (qcForSensor(sensor)?.flags || []).includes('SPIKES')
+      },
+      {
+        key: 'flatlines',
+        label: 'Flat/stuck values',
+        help: 'Repeated values suggest stuck sensor',
+        matches: (sensor) => (qcForSensor(sensor)?.flags || []).includes('FLATLINES')
+      },
+      {
+        key: 'too_few',
+        label: 'Too few readings',
+        help: 'Not enough usable readings',
+        matches: (sensor) => (qcForSensor(sensor)?.flags || []).includes('TOO_FEW_READINGS') || Number(qcForSensor(sensor)?.validReadings) < 4
+      },
+      {
+        key: 'outside_bbmp',
+        label: 'Outside BBMP',
+        help: 'Sensor point is outside ward boundary',
+        matches: (sensor) => (qcForSensor(sensor)?.flags || []).includes('OUTSIDE_BBMP_BOUNDARY')
+      }
+    ];
+    const isReviewQcSensor = (sensor) => ['USABLE_WITH_CAUTION', 'POOR', 'INSUFFICIENT_DATA'].includes(qcStatusForSensor(sensor));
+    const reviewReasonMatches = (sensor, key) => {
+      if (!key) return true;
+      return reviewQcReasonDefinitions.find((item) => item.key === key)?.matches(sensor) || false;
+    };
     const formatNumber = (value, decimals = 0) => {
       const number = Number(value);
       if (!Number.isFinite(number)) return value || '-';
@@ -798,7 +847,48 @@
         const dataMatch = !legendFilter || sensor.dataCategory === legendFilter;
         const wardStatusMatch = !wardStatusFilter || mapWardStatusKey(sensor.wardNo) === wardStatusFilter;
         const qcMatch = !qcFilter || qcStatusForSensor(sensor) === qcFilter;
-        return dataMatch && wardStatusMatch && qcMatch && directMatch;
+        const reviewReasonMatch = !reviewReasonFilter || (isReviewQcSensor(sensor) && reviewReasonMatches(sensor, reviewReasonFilter));
+        return dataMatch && wardStatusMatch && qcMatch && reviewReasonMatch && directMatch;
+      });
+    };
+
+    const renderReviewQcBreakdown = () => {
+      if (!els.reviewQcBreakdown) return;
+      const reviewSensors = sensors.filter(isReviewQcSensor);
+      if (!reviewSensors.length) {
+        els.reviewQcBreakdown.innerHTML = '';
+        return;
+      }
+      const statusCounts = {
+        caution: reviewSensors.filter((sensor) => qcStatusForSensor(sensor) === 'USABLE_WITH_CAUTION').length,
+        insufficient: reviewSensors.filter((sensor) => qcStatusForSensor(sensor) === 'INSUFFICIENT_DATA').length,
+        poor: reviewSensors.filter((sensor) => qcStatusForSensor(sensor) === 'POOR').length
+      };
+      const reasonButtons = reviewQcReasonDefinitions
+        .map((reason) => ({ ...reason, count: reviewSensors.filter(reason.matches).length }))
+        .filter((reason) => reason.count > 0)
+        .map((reason) => `
+          <button type="button" data-review-reason-filter="${reason.key}" class="${reviewReasonFilter === reason.key ? 'active' : ''}" title="${htmlEscape(reason.help)}">
+            <strong>${formatNumber(reason.count)}</strong>
+            <span>${htmlEscape(reason.label)}</span>
+          </button>
+        `).join('');
+      els.reviewQcBreakdown.innerHTML = `
+        <div class="review-qc-heading">
+          <strong>Review QC breakdown</strong>
+          <span>${formatNumber(statusCounts.caution)} caution + ${formatNumber(statusCounts.insufficient)} low data + ${formatNumber(statusCounts.poor)} poor</span>
+        </div>
+        <div class="review-qc-reasons">
+          ${reasonButtons}
+          ${reviewReasonFilter ? '<button type="button" data-review-reason-filter="">Clear reason filter</button>' : ''}
+        </div>
+      `;
+      els.reviewQcBreakdown.querySelectorAll('[data-review-reason-filter]').forEach((button) => {
+        button.addEventListener('click', () => {
+          reviewReasonFilter = button.dataset.reviewReasonFilter || '';
+          renderSensors();
+          fitSensors();
+        });
       });
     };
 
@@ -809,7 +899,8 @@
       els.withDataCount.textContent = String(sensors.filter((sensor) => sensor.hasData).length);
       els.withoutDataCount.textContent = String(sensors.filter((sensor) => !sensor.hasData).length);
       els.goodQcCount.textContent = String(sensors.filter((sensor) => qcStatusForSensor(sensor) === 'GOOD').length);
-      els.reviewQcCount.textContent = String(sensors.filter((sensor) => ['USABLE_WITH_CAUTION', 'POOR', 'INSUFFICIENT_DATA'].includes(qcStatusForSensor(sensor))).length);
+      els.reviewQcCount.textContent = String(sensors.filter(isReviewQcSensor).length);
+      renderReviewQcBreakdown();
       if (els.specificCapacityCount) {
         els.specificCapacityCount.textContent = String(sensors.filter((sensor) => sensor.dataCategory === 'both').length);
       }
@@ -834,7 +925,7 @@
 
     const renderList = (visible) => {
       els.sensorList.innerHTML = '';
-      if (!els.search.value.trim() && !legendFilter && !qcFilter) {
+      if (!els.search.value.trim() && !legendFilter && !qcFilter && !reviewReasonFilter) {
         const empty = document.createElement('div');
         empty.className = 'sensor-meta';
         empty.style.padding = '14px 10px';
