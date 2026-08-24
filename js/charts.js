@@ -126,6 +126,18 @@
       const allDropStatsPositive = Boolean(wardData?.dropAllPositive);
       const dropClass = Number(avgDrop) > 0 ? 'bad' : Number(avgDrop) < 0 ? 'good' : '';
       const hasWardWeeklyData = cleanWeeklyPoints.length >= 2;
+      const rainfall = wardData?.rainfall || null;
+      const rainfallYears = Array.isArray(rainfall?.yearTotals) ? rainfall.yearTotals : [];
+      const rainfallSource = rainfall?.source === 'CHIRPS' ? 'CHIRPS' : rainfall?.source === 'NASA_POWER' ? 'NASA POWER' : 'Rainfall';
+      const rainfallYearText = rainfallYears.length
+        ? rainfallYears.map((item) => `${htmlEscape(item.year)}: ${formatNumber(item.rainfallMm, 1)} mm`).join('<br>')
+        : '';
+      const rainfallMetrics = rainfall ? `
+        ${wardMetric(`Total ${rainfallSource} Rainfall`, `${formatNumber(rainfall.totalRainfallMm, 1)} mm`)}
+        ${wardMetric(`${new Date().getFullYear()} Rainfall Till Date`, `${formatNumber(rainfall.currentYearRainfallMm, 1)} mm`)}
+        ${wardMetric('Rainfall Data Period', `${formatDateTime(rainfall.firstRainfallDate).split(',')[0]} to ${formatDateTime(rainfall.lastRainfallDate).split(',')[0]}`)}
+        ${rainfallYearText ? wardMetric('Year-wise Rainfall', rainfallYearText) : ''}
+      ` : '';
       const weeklyOutlierNote = weeklyCleanPreview.outliers.length
         ? `<div class="ward-note">${formatNumber(weeklyCleanPreview.outliers.length)} weekly groundwater point(s) were hidden because they were invalid, negative/zero, or isolated unrealistic jumps compared with neighbouring weeks.</div>`
         : '';
@@ -395,6 +407,7 @@
                 ${vd.deficitMl > 0 ? wardMetric('Groundwater Volumetric Loss', `${formatNumber(vd.deficitMl, 2)} ML (~${formatNumber(vd.deficitTankers, 0)} tankers)`, 'bad') : ''}
                 ${vd.category ? wardMetric('Observation Period', htmlEscape(vd.category)) : ''}
                 ${keyPumpingMetrics}
+                ${rainfallMetrics}
               </section>
             `;
           })()}
