@@ -813,9 +813,7 @@
       color: '#020617',
       weight: 5,
       opacity: 1,
-      fillOpacity: Number(base.fillOpacity || 0) > 0
-        ? Math.min(0.86, Number(base.fillOpacity) + 0.12)
-        : 0,
+      fillOpacity: Number(base.fillOpacity || 0) > 0 ? 1 : 0,
       className: 'ward-focused-shape'
     });
     const wardStyle = (feature) => {
@@ -833,7 +831,7 @@
           opacity: 1,
           fill: true,
           fillColor: mapLensCriticalColor(),
-          fillOpacity: 0.88
+          fillOpacity: 1
         };
       } else if (currentDataSource === 'kh' && wardAnalysisLens === 'groundwater' && isGroundwaterRiseWard(critical)) {
         style = {
@@ -842,7 +840,7 @@
           opacity: 1,
           fill: true,
           fillColor: 'rgb(0, 255, 0)',
-          fillOpacity: 0.9
+          fillOpacity: 1
         };
       } else if (currentDataSource === 'kh' && key === 'stable') {
         style = {
@@ -851,7 +849,7 @@
           opacity: 0.95,
           fill: true,
           fillColor: 'rgb(255, 255, 0)',
-          fillOpacity: 0.88
+          fillOpacity: 1
         };
       }
       return isFocused ? focusedWardStyle(style) : style;
