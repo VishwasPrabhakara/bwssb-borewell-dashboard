@@ -739,9 +739,9 @@
             {
               label: inverseDischargeMode ? 'Inverse specific capacity vs discharge' : mode === 'discharge' ? 'Specific capacity vs discharge' : 'Specific capacity vs pumping time',
               data: points,
-              borderColor: '#0f8f4d',
+              borderColor: 'rgb(0, 255, 0)',
               pointBackgroundColor: '#f8fafc',
-              pointBorderColor: '#0f8f4d',
+              pointBorderColor: 'rgb(0, 255, 0)',
               pointRadius: 4,
               pointHoverRadius: 7,
               showLine: false,
@@ -750,7 +750,7 @@
             ...(modelPoints.length ? [{
               label: `${inverseDischargeMode ? 'Jacob linear model' : 'Jacob reciprocal curve'} (R2 ${formatNumber(jacob.r2, 3)})`,
               data: modelPoints,
-              borderColor: '#dc2626',
+              borderColor: 'rgb(255, 0, 0)',
               borderWidth: 3,
               pointRadius: 0,
               showLine: true,
@@ -777,8 +777,8 @@
         const fit = indexedTrendFit(values, times);
         const seriesMedian = medianValue(values.filter(Number.isFinite));
         const trendLabel = performanceTrendLabel(fit, seriesMedian, inverseMode);
-        const trendColor = trendLabel.includes('worsening') ? '#dc2626'
-          : trendLabel.includes('improving') ? '#0f8f4d'
+        const trendColor = trendLabel.includes('worsening') ? 'rgb(255, 0, 0)'
+          : trendLabel.includes('improving') ? 'rgb(0, 255, 0)'
             : '#66727f';
         const trendDataset = trendLabel === 'Insufficient temporal data'
           ? []
@@ -797,7 +797,7 @@
           {
             label: inverseMode ? 'Inverse specific capacity' : 'Specific capacity',
             data: values,
-            borderColor: '#0f8f4d',
+            borderColor: 'rgb(0, 255, 0)',
             showLine: false,
             unit: inverseMode ? 's/m2' : 'x10^-6 m2/s'
           },
@@ -874,7 +874,7 @@
       const groups = [
         { label: 'High priority', color: '#b91c1c' },
         { label: 'High extraction', color: '#c2410c' },
-        { label: 'Good performer', color: '#047857' },
+        { label: 'Good performer', color: 'rgb(0, 255, 0)' },
         { label: 'Moderate / normal', color: '#2563eb' }
       ];
       canvas._chart = renderWardLineChart(canvas, [], groups.map((group) => ({
@@ -952,8 +952,8 @@
             ? recentFit.senTrendData?.[index - recentTrendStart] ?? null
             : null
         ));
-        const slopeColor = Number(slopeFit.senSlopeFtPerWeek) > 0 ? '#dc2626' : Number(slopeFit.senSlopeFtPerWeek) < 0 ? '#0f8f4d' : '#66727f';
-        const recentSlopeColor = Number(recentFit.senSlopeFtPerWeek) > 0 ? '#991b1b' : Number(recentFit.senSlopeFtPerWeek) < 0 ? '#047857' : '#a16207';
+        const slopeColor = Number(slopeFit.senSlopeFtPerWeek) > 0 ? 'rgb(255, 0, 0)' : Number(slopeFit.senSlopeFtPerWeek) < 0 ? 'rgb(0, 255, 0)' : 'rgb(255, 255, 0)';
+        const recentSlopeColor = Number(recentFit.senSlopeFtPerWeek) > 0 ? 'rgb(255, 0, 0)' : Number(recentFit.senSlopeFtPerWeek) < 0 ? 'rgb(0, 255, 0)' : 'rgb(255, 255, 0)';
         renderWardLineChart(wardCanvas, labels, [
           {
             label: wardLevelConfig.levelLabel,

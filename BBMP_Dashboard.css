@@ -90,7 +90,7 @@
   padding: 7px;
   border-radius: 6px;
   background: #fef2f2;
-  color: #7f1d1d;
+  color: rgb(255, 0, 0);
 }
 
 .popup-reason > div {
@@ -192,13 +192,13 @@
     }
 
     .critical-ward-selected .details {
-      background: #7f1d1d;
-      border-left-color: #450a0a;
+      background: rgb(255, 0, 0);
+      border-left-color: rgb(255, 0, 0);
     }
 
     .critical-ward-selected .details header {
-      background: #7f1d1d;
-      border-bottom-color: #991b1b;
+      background: rgb(255, 0, 0);
+      border-bottom-color: rgb(255, 0, 0);
       color: #fff;
     }
 
@@ -212,7 +212,7 @@
 
     .critical-ward-selected .details-close {
       border-color: #fecaca;
-      color: #7f1d1d;
+      color: rgb(255, 0, 0);
       background: #fff;
     }
 
@@ -1031,7 +1031,7 @@
       border: 1px solid #ef9a9a;
       border-radius: 8px;
       background: #fff1f1;
-      color: #7f1d1d;
+      color: rgb(255, 0, 0);
       padding: 12px 14px;
       box-shadow: 0 8px 18px rgba(127, 29, 29, 0.08);
     }
@@ -1045,7 +1045,7 @@
 
     .critical-reason strong {
       display: block;
-      color: #991b1b;
+      color: rgb(255, 0, 0);
       font-size: 15px;
       margin-bottom: 6px;
     }
@@ -1175,7 +1175,7 @@
     .uid-list span.danger {
       border-color: #ef9a9a;
       background: #fff1f1;
-      color: #991b1b;
+      color: rgb(255, 0, 0);
     }
 
     .uid-chart-list {
@@ -1193,11 +1193,11 @@
 
     .uid-chart-card.capacity-alert {
       border-color: #ef9a9a;
-      box-shadow: inset 4px 0 0 #dc2626;
+      box-shadow: inset 4px 0 0 rgb(255, 0, 0);
     }
 
     .uid-chart-card.specific-low-alert summary > span {
-      color: #991b1b;
+      color: rgb(255, 0, 0);
     }
 
     .uid-chart-card.specific-low-alert summary {
@@ -1209,7 +1209,7 @@
       margin-left: 8px;
       border-radius: 999px;
       background: #fff1f1;
-      color: #991b1b;
+      color: rgb(255, 0, 0);
       font-size: 10px;
       font-style: normal;
       font-weight: 800;
@@ -1716,9 +1716,9 @@
   --accent: #007f72;
   --accent-dark: #075e56;
   --soft: #f5f8fa;
-  --critical: #450a0a;
-  --rise: #022c22;
-  --stable: #a16207;
+  --critical: rgb(255, 0, 0);
+  --rise: rgb(0, 255, 0);
+  --stable: rgb(255, 255, 0);
   --shadow: 0 10px 30px rgba(21, 35, 48, 0.14);
 }
 
@@ -2186,7 +2186,7 @@ button.primary:hover:not(:disabled) {
 .performance-badge.critical-row {
   border-color: #f0a8a8;
   background: #fff1f2;
-  color: #991b1b;
+  color: rgb(255, 0, 0);
 }
 
 .performance-badge.warning-row {

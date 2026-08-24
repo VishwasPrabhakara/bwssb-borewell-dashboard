@@ -39,7 +39,7 @@
     };
 
     const wardConfidenceColors = {
-      High: '#0f8f4d',
+      High: 'rgb(0, 255, 0)',
       Medium: '#f2a900',
       Low: '#d64545'
     };
@@ -583,11 +583,11 @@
           <div class="map-status-counts" aria-label="Ward status counts">
             <button type="button" data-method-status-filter="critical" title="Filter critical wards"><i style="background:${mapLensCriticalColor()}"></i>${formatNumber(counts.critical)}</button>
             ${wardAnalysisLens === 'groundwater' ? `
-              <button type="button" data-method-status-filter="rise" title="Filter groundwater rise wards"><i style="background:#022c22"></i>${formatNumber(counts.rise)}</button>
-              <button type="button" data-method-status-filter="stable" title="Filter analysed wards that are not critical or rising"><i style="background:#a16207"></i>${formatNumber(counts.stable)}</button>
+              <button type="button" data-method-status-filter="rise" title="Filter groundwater rise wards"><i style="background:rgb(0, 255, 0)"></i>${formatNumber(counts.rise)}</button>
+              <button type="button" data-method-status-filter="stable" title="Filter analysed wards that are not critical or rising"><i style="background:rgb(255, 255, 0)"></i>${formatNumber(counts.stable)}</button>
             ` : ''}
             ${wardAnalysisLens !== 'groundwater' && wardAnalysisLens !== 'consumption' ? `
-              <button type="button" data-method-status-filter="stable" title="Filter wards below this lens threshold"><i style="background:#a16207"></i>${formatNumber(counts.stable)}</button>
+              <button type="button" data-method-status-filter="stable" title="Filter wards below this lens threshold"><i style="background:rgb(255, 255, 0)"></i>${formatNumber(counts.stable)}</button>
             ` : ''}
           </div>
         </div>
