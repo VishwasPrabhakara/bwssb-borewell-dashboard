@@ -587,7 +587,7 @@
               <button type="button" data-method-status-filter="stable" title="Filter analysed wards that are not critical or rising"><i style="background:#eab308"></i>${formatNumber(counts.stable)}</button>
             ` : ''}
             ${wardAnalysisLens !== 'groundwater' && wardAnalysisLens !== 'consumption' ? `
-              <button type="button" data-method-status-filter="stable" title="Filter wards below this lens threshold"><i style="background:#94a3b8"></i>${formatNumber(counts.stable)}</button>
+              <button type="button" data-method-status-filter="stable" title="Filter wards below this lens threshold"><i style="background:#eab308"></i>${formatNumber(counts.stable)}</button>
             ` : ''}
           </div>
         </div>

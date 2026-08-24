@@ -684,7 +684,7 @@ let hoveredLayer = null;
         <div class="legend-title legend-title-spaced">Ward status</div>
         <button class="legend-row" data-ward-filter="critical" type="button"><span class="swatch" style="background:#7f1d1d"></span><span data-ward-legend-label="critical">Critical: GW Decline</span></button>
         <button class="legend-row" data-ward-filter="rise" type="button"><span class="swatch" style="background:#065f46"></span><span data-ward-legend-label="rise">Groundwater Rise</span></button>
-        <button class="legend-row" data-ward-filter="stable" type="button"><span class="swatch" style="background:#eab308"></span><span data-ward-legend-label="stable">Stable</span></button>
+        <button class="legend-row" data-ward-filter="stable" type="button"><span class="swatch" style="background:#eab308"></span><span data-ward-legend-label="stable">Stable / below threshold</span></button>
         <div class="legend-note" data-ward-legend-note>
           Red, green, and yellow fills show final mapped groundwater status. Wards without usable trend evidence are left unfilled.
         </div>
@@ -699,17 +699,30 @@ let hoveredLayer = null;
       const criticalLegendLabel = criticalLegendButton?.querySelector('[data-ward-legend-label="critical"]');
       if (criticalLegendSwatch) criticalLegendSwatch.style.background = mapLensCriticalColor();
       if (criticalLegendLabel) criticalLegendLabel.textContent = mapLensCriticalLabel();
+      const riseLegendLabel = document.querySelector('[data-ward-legend-label="rise"]');
+      const stableLegendLabel = document.querySelector('[data-ward-legend-label="stable"]');
+      if (riseLegendLabel) riseLegendLabel.textContent = 'Groundwater Rise';
+      if (stableLegendLabel) {
+        stableLegendLabel.textContent = wardAnalysisLens === 'groundwater'
+          ? 'Stable groundwater trend'
+          : 'Below selected threshold';
+      }
       const legendNote = document.querySelector('[data-ward-legend-note]');
       if (legendNote) {
         legendNote.textContent = wardAnalysisLens === 'groundwater'
-          ? 'Red, green, and yellow fills show groundwater decline, rise, and near-flat stable status. Mixed or unclassified wards are left unfilled.'
-          : `${wardAnalysisLensLabel()} is shown as ${mapLensCriticalColor()} fill. Wards not meeting this lens threshold are left unfilled.`;
+          ? 'Red = selected groundwater decline method marks the ward critical. Green = groundwater depth is reducing/rising. Yellow = enough data exists and the trend is near-flat/stable. Unfilled = mixed, unclassified, or insufficient evidence.'
+          : `Red = ward meets the selected ${wardAnalysisLensLabel()} critical threshold. Yellow = ward has data for this lens but does not meet the critical threshold. Unfilled = no usable data for this lens.`;
       }
       document.querySelectorAll('.legend button[data-filter]').forEach((button) => {
         button.classList.toggle('active', button.dataset.filter === legendFilter);
       });
       document.querySelectorAll('.legend button[data-ward-filter]').forEach((button) => {
-        if (['rise', 'stable'].includes(button.dataset.wardFilter)) button.style.display = wardAnalysisLens === 'groundwater' && latestWardStatusCounts[button.dataset.wardFilter] > 0 ? '' : 'none';
+        if (button.dataset.wardFilter === 'rise') {
+          button.style.display = wardAnalysisLens === 'groundwater' && latestWardStatusCounts.rise > 0 ? '' : 'none';
+        }
+        if (button.dataset.wardFilter === 'stable') {
+          button.style.display = latestWardStatusCounts.stable > 0 && !['overall', 'consumption'].includes(wardAnalysisLens) ? '' : 'none';
+        }
         button.classList.toggle('active', button.dataset.wardFilter === wardStatusFilter);
       });
     };
