@@ -380,27 +380,10 @@ let hoveredLayer = null;
       }
       try {
         dashboardDataCache.delete('kh');
-        els.refreshStatus.textContent = 'Downloading latest KrishiHrudaya reports...';
-        await fetch(`${API_BASE_URL}/api/refresh`);
-        const started = Date.now();
-        const timer = window.setInterval(async () => {
-          const status = await (await fetch(`${API_BASE_URL}/api/status`)).json();
-          els.refreshStatus.textContent = status.running ? 'Downloading latest KrishiHrudaya reports...' : 'Checking latest KrishiHrudaya data...';
-          if (!status.running || Date.now() - started > 260000) {
-            window.clearInterval(timer);
-            if (status.ok === false) {
-              els.refreshStatus.textContent = 'Could not refresh KrishiHrudaya data. Using the latest local files.';
-              showToast('Could not refresh KrishiHrudaya data. Check the downloader login or network connection.');
-            } else {
-              const finished = status.lastFinished ? new Date(status.lastFinished).toLocaleString('en-IN') : 'now';
-              els.refreshStatus.textContent = `Latest KrishiHrudaya data updated ${finished}.`;
-            }
-            dashboardDataCache.delete('kh');
-            await loadSensors();
-          }
-        }, 2500);
+        els.refreshStatus.textContent = 'Reloading latest uploaded KH Excel ZIP data...';
+        await loadSensors();
       } catch (error) {
-        els.refreshStatus.textContent = 'Could not start data refresh.';
+        els.refreshStatus.textContent = 'Could not reload dashboard data.';
         showToast(error.message);
       }
     };
@@ -972,7 +955,6 @@ let hoveredLayer = null;
     (async () => {
       try {
         await Promise.all([drawShapeFile(), loadSensors()]);
-        if (currentDataSource === 'kh') refreshData();
       } catch (error) {
         showToast(error.message);
       }
