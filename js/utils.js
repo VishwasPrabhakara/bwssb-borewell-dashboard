@@ -47,6 +47,15 @@
     const colorForSensor = (sensor) => dataCategoryColors[sensor.dataCategory || 'none'];
     const qcForSensor = (sensor) => sensor.qc || sensorQcByUid.get(String(sensor.uid));
     const qcStatusForSensor = (sensor) => qcForSensor(sensor)?.qcStatus || '';
+    const hasMajorQcPlotFlags = (qc) => {
+      const flags = qc?.flags || [];
+      return flags.includes('FLATLINES') || flags.includes('SPIKES') || flags.includes('LONG_GAPS');
+    };
+    const displayQcStatusForSensor = (sensor) => {
+      const qc = qcForSensor(sensor);
+      if (!qc?.qcStatus) return '';
+      return qc.qcStatus === 'GOOD' && hasMajorQcPlotFlags(qc) ? 'USABLE_WITH_CAUTION' : qc.qcStatus;
+    };
     const qcBadgeHtml = (status) => {
       if (!status) return '-';
       const label = qcStatusLabels[status] || status;
@@ -97,7 +106,7 @@
         matches: (sensor) => (qcForSensor(sensor)?.flags || []).includes('OUTSIDE_BBMP_BOUNDARY')
       }
     ];
-    const isReviewQcSensor = (sensor) => ['USABLE_WITH_CAUTION', 'POOR', 'INSUFFICIENT_DATA'].includes(qcStatusForSensor(sensor));
+    const isReviewQcSensor = (sensor) => ['USABLE_WITH_CAUTION', 'POOR', 'INSUFFICIENT_DATA'].includes(displayQcStatusForSensor(sensor));
     const reviewReasonMatches = (sensor, key) => {
       if (!key) return true;
       return reviewQcReasonDefinitions.find((item) => item.key === key)?.matches(sensor) || false;
@@ -828,7 +837,7 @@
       <div><strong>Borewell Depth:</strong> ${formatDepth(sensor.borewellDepth)}</div>
       <div><strong>Lat/Lon:</strong> ${Number(sensor.lat).toFixed(6)}, ${Number(sensor.lng).toFixed(6)}</div>
       <div><strong>Data:</strong> ${dataCategoryLabels[sensor.dataCategory || 'none'] || dataCategoryLabels.none}</div>
-      <div><strong>QC:</strong> ${qcStatusLabels[qcStatusForSensor(sensor)] || 'Not scored'}</div>
+      <div><strong>QC:</strong> ${qcStatusLabels[displayQcStatusForSensor(sensor)] || 'Not scored'}</div>
       <div><strong>First Data:</strong> ${formatDateTime(sensor.firstDataAt)}</div>
       <div><strong>Last Data:</strong> ${formatDateTime(sensor.lastDataAt)}</div>
       <div><strong>Readings:</strong> ${formatNumber(sensor.totalReadings || 0)}</div>
@@ -846,7 +855,7 @@
         const directMatch = !query || wardNumberMatch || wardNameMatch || uidMatch;
         const dataMatch = !legendFilter || sensor.dataCategory === legendFilter;
         const wardStatusMatch = !wardStatusFilter || mapWardStatusKey(sensor.wardNo) === wardStatusFilter;
-        const qcMatch = !qcFilter || qcStatusForSensor(sensor) === qcFilter;
+        const qcMatch = !qcFilter || displayQcStatusForSensor(sensor) === qcFilter;
         const reviewReasonMatch = !reviewReasonFilter || (isReviewQcSensor(sensor) && reviewReasonMatches(sensor, reviewReasonFilter));
         return dataMatch && wardStatusMatch && qcMatch && reviewReasonMatch && directMatch;
       });
@@ -860,9 +869,9 @@
         return;
       }
       const statusCounts = {
-        caution: reviewSensors.filter((sensor) => qcStatusForSensor(sensor) === 'USABLE_WITH_CAUTION').length,
-        insufficient: reviewSensors.filter((sensor) => qcStatusForSensor(sensor) === 'INSUFFICIENT_DATA').length,
-        poor: reviewSensors.filter((sensor) => qcStatusForSensor(sensor) === 'POOR').length
+        caution: reviewSensors.filter((sensor) => displayQcStatusForSensor(sensor) === 'USABLE_WITH_CAUTION').length,
+        insufficient: reviewSensors.filter((sensor) => displayQcStatusForSensor(sensor) === 'INSUFFICIENT_DATA').length,
+        poor: reviewSensors.filter((sensor) => displayQcStatusForSensor(sensor) === 'POOR').length
       };
       const reasonButtons = reviewQcReasonDefinitions
         .map((reason) => ({ ...reason, count: reviewSensors.filter(reason.matches).length }))
@@ -898,7 +907,7 @@
       els.totalCount.textContent = String(sensors.length);
       els.withDataCount.textContent = String(sensors.filter((sensor) => sensor.hasData).length);
       els.withoutDataCount.textContent = String(sensors.filter((sensor) => !sensor.hasData).length);
-      els.goodQcCount.textContent = String(sensors.filter((sensor) => qcStatusForSensor(sensor) === 'GOOD').length);
+      els.goodQcCount.textContent = String(sensors.filter((sensor) => displayQcStatusForSensor(sensor) === 'GOOD').length);
       els.reviewQcCount.textContent = String(sensors.filter(isReviewQcSensor).length);
       renderReviewQcBreakdown();
       if (els.specificCapacityCount) {

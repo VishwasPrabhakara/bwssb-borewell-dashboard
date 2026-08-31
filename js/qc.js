@@ -1007,9 +1007,15 @@
 
       const waterCanvas = document.getElementById('waterChart');
       const dischargeCanvas = document.getElementById('dischargeChart');
-      els.waterEmpty.textContent = waterPoints.length && !hasWaterChart
-        ? 'Not plotted because fewer than 3 valid cleaned water-level readings remain for this range.'
-        : 'No water-level data for this borewell and range.';
+      if (waterPoints.length && !hasWaterChart) {
+        const flags = qcForSensor(selectedSensor)?.flags || [];
+        const flagText = flags.length ? ` QC flags: ${flags.join(', ')}.` : '';
+        els.waterEmpty.textContent = pointGroups.outliers.length
+          ? `Not plotted because all ${formatNumber(pointGroups.outliers.length)} water-level point(s) in this range were removed by the plot cleaner.${flagText} Use "Show outliers" to inspect the hidden raw points.`
+          : `Not plotted because fewer than 3 valid cleaned water-level readings remain for this range.${flagText}`;
+      } else {
+        els.waterEmpty.textContent = 'No water-level data for this borewell and range.';
+      }
       els.waterEmpty.style.display = hasWaterChart ? 'none' : 'grid';
       waterCanvas.style.display = hasWaterChart ? 'block' : 'none';
       const showDischargeBox = currentDataSource !== 'vendor';
@@ -1255,7 +1261,7 @@
       if (els.detailReadings) els.detailReadings.textContent = formatNumber(sensor.totalReadings || 0);
       if (els.detailDataType) els.detailDataType.textContent = dataCategoryLabels[sensor.dataCategory || 'none'] || dataCategoryLabels.none;
       const qc = qcForSensor(sensor);
-      if (els.detailQcStatus) els.detailQcStatus.innerHTML = qc ? qcBadgeHtml(qc.qcStatus) : '-';
+      if (els.detailQcStatus) els.detailQcStatus.innerHTML = qc ? qcBadgeHtml(displayQcStatusForSensor(sensor)) : '-';
       if (els.detailQcScore) els.detailQcScore.textContent = qc ? `${formatNumber(qc.overallQcScore || 0, 1)} / 100` : '-';
       if (els.detailQcFlags) els.detailQcFlags.textContent = qc?.flags?.length ? qc.flags.join(', ') : (qc ? 'None' : '-');
 
