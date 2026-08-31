@@ -253,7 +253,7 @@
           ? `<div class="ward-note">${formatNumber(capacityDiagnostics.sensorsWithoutValidSpecificCapacity)} sensor(s) in this ward have both water-level and discharge data, but were not used because no valid pumping session was found with positive duration, positive drawdown, and discharge inside the pumping period.${skippedCapacityReasons ? `<br><br>${skippedCapacityReasons}` : ''}</div>`
           : '')
         : (Number(capacityDiagnostics.candidateSensorsWithWaterAndDischarge || 0) > 0
-        ? `<div class="ward-note">This ward has ${formatNumber(capacityDiagnostics.candidateSensorsWithWaterAndDischarge)} sensor(s) with both water-level and discharge data, but specific capacity cannot be calculated because no valid ON-to-OFF pumping session was found with positive duration, positive drawdown, and discharge during the pumping period.${skippedCapacityReasons ? `<br><br>${skippedCapacityReasons}` : ''}</div>`
+        ? `<div class="ward-note">This ward has ${formatNumber(capacityDiagnostics.candidateSensorsWithWaterAndDischarge)} sensor(s) with both water-level and discharge data, but specific capacity cannot be calculated because no valid KH pump START-to-END cycle was found with positive duration, positive drawdown, and discharge during the pumping period.${skippedCapacityReasons ? `<br><br>${skippedCapacityReasons}` : ''}</div>`
           : '<div class="ward-note">Specific capacity is not available in the API response for this ward. This may be an API/cache issue if the downloaded Excel shows valid sessions.</div>');
       const capacityPanels = capacitySensors.map((sensor, index) => {
         const uid = String(sensor.uid);
@@ -417,10 +417,10 @@
           <section class="ward-explain formula-card">
             <h3>Calculation Notes</h3>
             <p><strong>Groundwater Volumetric Loss</strong> = Ward Area (m2) x Water Level Drop (m) x Specific Yield (S<sub>y</sub> = 0.02). Represents total physical volume of groundwater depleted from subsurface storage.</p>
-            <p><strong>Static Rest Water Table</strong> = Measured at motor startup (Motor ON) to isolate true water table trends from active pumping drawdown.</p>
-            <p><strong>Specific Capacity</strong> = Lowest discharge during pumping period / Drawdown.</p>
-            <p><strong>Inverse Specific Capacity</strong> = Drawdown / Lowest discharge during pumping period.</p>
-            <p><strong>Estimated Pumped Volume</strong> = Average session discharge x pumping duration. Minimum discharge is used only when average discharge is unavailable.</p>
+            <p><strong>Static Rest Water Table</strong> = Measured at the KH pump START row to isolate true water table trends from active pumping drawdown.</p>
+            <p><strong>Specific Capacity</strong> = Lowest pump flow during one KH START-to-END pump cycle / Drawdown.</p>
+            <p><strong>Inverse Specific Capacity</strong> = Drawdown / Lowest pump flow during one KH START-to-END pump cycle.</p>
+            <p><strong>Estimated Pumped Volume</strong> = End cumulative water yield - Start cumulative water yield, when available. Otherwise average session discharge x pumping duration is used.</p>
             <p><strong>Volume-normalized Drawdown</strong> = Drawdown / Estimated pumped volume. Higher values indicate a larger water-level response per cubic metre extracted.</p>
             <p>Groundwater decline uses cleaned weekly water-level readings; positive slope means water level below surface is increasing, which indicates decline.</p>
           </section>
@@ -1071,7 +1071,7 @@
               unit: 'ft'
             }] : []),
             {
-              label: 'On level',
+              label: 'Pump START level',
               data: sessionLevelPointData(daily, cleanedDailySet, 'on'),
               borderColor: 'rgba(0,0,0,0)',
               pointBorderColor: '#15803d',
@@ -1085,7 +1085,7 @@
               unit: 'ft'
             },
             {
-              label: 'Off level',
+              label: 'Pump END level',
               data: sessionLevelPointData(daily, cleanedDailySet, 'off'),
               borderColor: 'rgba(0,0,0,0)',
               pointBorderColor: '#1d4ed8',
@@ -1163,7 +1163,7 @@
           if (empty) empty.style.display = 'none';
           canvas._chart = renderWardLineChart(canvas, drops.map((point) => point.label), [
             {
-              label: useSession ? 'ON-OFF drawdown' : 'Level change',
+              label: useSession ? 'Pump-cycle drawdown' : 'Level change',
               data: drops.map((point) => useSession ? point.dropFtPerHour : point.dropFtPerHour),
               borderColor: '#b91c1c',
               showLine: false,

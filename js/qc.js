@@ -1032,7 +1032,7 @@
             tension: 0
           },
           {
-            label: 'On level',
+            label: 'Pump START level',
             data: sessionLevelPointData(plotPoints, cleanedSet, 'on'),
             borderColor: 'rgba(0,0,0,0)',
             pointBorderColor: '#15803d',
@@ -1045,7 +1045,7 @@
             showLine: false
           },
           {
-            label: 'Off level',
+            label: 'Pump END level',
             data: sessionLevelPointData(plotPoints, cleanedSet, 'off'),
             borderColor: 'rgba(0,0,0,0)',
             pointBorderColor: '#1d4ed8',
@@ -1158,8 +1158,8 @@
           const onX = startTimestamp(point);
           const offX = stopTimestamp(point);
           return [
-            { x: onX, y: point.onLevel, label: label(onX, 'ON') },
-            { x: offX, y: point.offLevel, label: label(offX, 'OFF') }
+            { x: onX, y: point.onLevel, label: label(onX, 'START') },
+            { x: offX, y: point.offLevel, label: label(offX, 'END') }
           ];
         });
       }
@@ -1191,7 +1191,7 @@
             : stop;
           const y = Number(point[key]);
           return Number.isFinite(x) && Number.isFinite(y)
-            ? { x, y, label: `${new Date(x).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}${semantic ? ` ${semantic.toUpperCase()}` : ''}` }
+            ? { x, y, label: `${new Date(x).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}${semantic ? ` ${semantic === 'on' ? 'START' : 'END'}` : ''}` }
             : { x, y: null };
         });
     };
