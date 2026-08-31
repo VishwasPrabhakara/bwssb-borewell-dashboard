@@ -125,6 +125,7 @@ const els = {
   detailDataType: document.getElementById('detailDataType'),
   detailQcStatus: document.getElementById('detailQcStatus'),
   detailQcScore: document.getElementById('detailQcScore'),
+  detailPlotReadiness: document.getElementById('detailPlotReadiness'),
   detailQcFlags: document.getElementById('detailQcFlags'),
   detailQcReasons: document.getElementById('detailQcReasons'),
 

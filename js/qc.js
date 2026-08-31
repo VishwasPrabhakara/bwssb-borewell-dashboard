@@ -1007,6 +1007,20 @@
 
       const waterCanvas = document.getElementById('waterChart');
       const dischargeCanvas = document.getElementById('dischargeChart');
+      if (els.detailPlotReadiness && selectedSensor) {
+        if (!waterPoints.length) {
+          els.detailPlotReadiness.textContent = 'No water-level rows';
+        } else if (hasWaterChart) {
+          const hiddenCount = pointGroups.outliers.length;
+          els.detailPlotReadiness.textContent = hiddenCount
+            ? `Plot-ready (${formatNumber(hiddenCount)} hidden)`
+            : 'Plot-ready';
+        } else {
+          const flags = qcForSensor(selectedSensor)?.flags || [];
+          const flagText = flags.length ? `: ${flags.join(', ')}` : '';
+          els.detailPlotReadiness.textContent = `Not plot-ready${flagText}`;
+        }
+      }
       if (waterPoints.length && !hasWaterChart) {
         const flags = qcForSensor(selectedSensor)?.flags || [];
         const flagText = flags.length ? ` QC flags: ${flags.join(', ')}.` : '';
@@ -1261,8 +1275,9 @@
       if (els.detailReadings) els.detailReadings.textContent = formatNumber(sensor.totalReadings || 0);
       if (els.detailDataType) els.detailDataType.textContent = dataCategoryLabels[sensor.dataCategory || 'none'] || dataCategoryLabels.none;
       const qc = qcForSensor(sensor);
-      if (els.detailQcStatus) els.detailQcStatus.innerHTML = qc ? qcBadgeHtml(displayQcStatusForSensor(sensor)) : '-';
+      if (els.detailQcStatus) els.detailQcStatus.innerHTML = qc ? qcBadgeHtml(qc.qcStatus) : '-';
       if (els.detailQcScore) els.detailQcScore.textContent = qc ? `${formatNumber(qc.overallQcScore || 0, 1)} / 100` : '-';
+      if (els.detailPlotReadiness) els.detailPlotReadiness.textContent = sensor.hasData ? 'Checking plot...' : 'No water-level rows';
       if (els.detailQcFlags) els.detailQcFlags.textContent = qc?.flags?.length ? qc.flags.join(', ') : (qc ? 'None' : '-');
 
 
