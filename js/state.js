@@ -84,6 +84,7 @@ let fullscreenChart = null;
 let fullscreenSource = null;
 let selectionSequence = 0;
 let legendFilter = 'both';
+let showAllDevices = false; // 579-only default; toggle turns on all devices
 let qcFilter = '';
 let reviewReasonFilter = '';
 

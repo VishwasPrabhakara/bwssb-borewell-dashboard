@@ -151,6 +151,16 @@
     <main class="stage" role="main">
       <div id="map" class="stage-map"></div>
 
+      <!-- Device visibility toggle (579-only vs all) -->
+      <div class="device-toggle" id="deviceToggle" role="group" aria-label="Device visibility">
+        <button class="device-toggle-btn active" data-device-mode="active" type="button">
+          <span class="device-toggle-dot device-toggle-dot-filled"></span>Live 579
+        </button>
+        <button class="device-toggle-btn" data-device-mode="all" type="button">
+          <span class="device-toggle-dot device-toggle-dot-hollow"></span>All devices
+        </button>
+      </div>
+
       <!-- Stable, non-cursor-following ward label. Updated only on click. -->
       <div class="selected-chip" id="selectedChip" hidden>
         <div class="selected-chip-kicker">Selected ward</div>
@@ -275,6 +285,7 @@
   <script src="https://unpkg.com/shpjs@latest/dist/shp.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="js/config.js?v=redesign-2026-09-10"></script>
+  <script src="js/with_data_uids.js?v=redesign-2026-09-10"></script>
   <script src="js/state.js?v=redesign-2026-09-10"></script>
   <script src="js/qc.js?v=redesign-2026-09-10"></script>
   <script src="js/utils.js?v=redesign-2026-09-10"></script>

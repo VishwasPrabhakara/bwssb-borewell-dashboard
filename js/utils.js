@@ -848,7 +848,8 @@
         const wardStatusMatch = !wardStatusFilter || mapWardStatusKey(sensor.wardNo) === wardStatusFilter;
         const qcMatch = !qcFilter || qcStatusForSensor(sensor) === qcFilter;
         const reviewReasonMatch = !reviewReasonFilter || (isReviewQcSensor(sensor) && reviewReasonMatches(sensor, reviewReasonFilter));
-        return dataMatch && wardStatusMatch && qcMatch && reviewReasonMatch && directMatch;
+        const withDataOnlyMatch = (typeof showAllDevices !== 'undefined' && showAllDevices) || (typeof WITH_DATA_UIDS === 'undefined') || WITH_DATA_UIDS.has(String(sensor.uid));
+        return dataMatch && wardStatusMatch && qcMatch && reviewReasonMatch && directMatch && withDataOnlyMatch;
       });
     };
 
