@@ -4,165 +4,232 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BBMP Borewell Dashboard</title>
-  <meta name="dashboard-build" content="kh-refresh-disabled-20260831">
+  <meta name="dashboard-build" content="redesign-2026-09-10">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="BBMP_Dashboard.css?v=kh-cycles-20260831">
+  <link rel="stylesheet" href="BBMP_Dashboard.css?v=redesign-2026-09-10">
 </head>
 <body>
-  <main class="app right-collapsed" id="app">
-    <button class="collapse-toggle" id="toggleLeft" title="Collapse sensor list" aria-label="Collapse sensor list">&lsaquo;</button>
-    <button class="collapse-toggle" id="toggleRight" title="Expand details panel" aria-label="Expand details panel">&lsaquo;</button>
+  <div class="app" id="app" data-left-open="false" data-right-open="false">
 
-    <aside>
-      <header class="brand-header">
-        <div class="brand-kicker">Groundwater operations</div>
-        <h1>BBMP Borewell Dashboard</h1>
-        <div class="system-status"><span class="status-pulse"></span><p class="subhead" id="refreshStatus">Dashboard uses the latest uploaded KH Excel ZIP data.</p></div>
-      </header>
+    <!-- ============================================================
+         TOP BAR — brand, city-level KPIs, search, menu
+         ============================================================ -->
+    <header class="topbar" role="banner">
+      <div class="topbar-brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-name">BBMP Borewell</div>
+          <div class="brand-sub">Groundwater outlook</div>
+        </div>
+      </div>
 
-      <section class="controls">
-        <div class="section-label">Find and inspect</div>
-        <label>
-          Search UID or Ward
-          <input id="search" type="search" placeholder="UID, ward number, ward name">
-        </label>
+      <div class="topbar-kpis" aria-label="City summary">
+        <div class="kpi">
+          <span class="kpi-value" id="totalCount">—</span>
+          <span class="kpi-label">Borewells</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-value" id="wardSensorCount">—</span>
+          <span class="kpi-label">Wards with sensors</span>
+        </div>
+        <div class="kpi">
+          <span class="kpi-value" id="goodQcCount">—</span>
+          <span class="kpi-label">Good QC</span>
+        </div>
+        <div class="kpi kpi-warn">
+          <span class="kpi-value" id="reviewQcCount">—</span>
+          <span class="kpi-label">Review QC</span>
+        </div>
+      </div>
 
-        <div class="button-row">
-          <button id="fitSensors" class="primary">Fit Borewells</button>
-          <button id="refreshData">Reload Data</button>
-          <button id="clearSelection" type="button" disabled>Clear Selection</button>
+      <div class="topbar-tools">
+        <div class="topbar-search">
+          <svg class="topbar-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="search" type="search" placeholder="Search UID, ward number or name" autocomplete="off">
         </div>
-      </section>
+        <button class="icon-btn" id="toggleLeft" aria-label="Open filters and list" aria-expanded="false" title="Filters and list">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+        </button>
+      </div>
+    </header>
 
-      <section class="controls qc-controls">
-        <div class="section-heading-row"><h2>Sensor quality</h2><span>Filter map and list</span></div>
-        <div class="qc-filter-grid">
-          <button class="active" data-qc-filter="" type="button">All</button>
-          <button data-qc-filter="GOOD" type="button">Good</button>
-          <button data-qc-filter="USABLE_WITH_CAUTION" type="button">Caution</button>
-          <button data-qc-filter="POOR" type="button">Poor</button>
-          <button data-qc-filter="INSUFFICIENT_DATA" type="button">Low Data</button>
-          <button data-qc-filter="NO_DATA" type="button">No Data</button>
-        </div>
-      </section>
+    <!-- ============================================================
+         LEFT RAIL — filters, sensor list, downloads
+         Collapsed by default; expands to a slim drawer.
+         ============================================================ -->
+    <aside class="left-rail" id="leftRail" aria-label="Filters and sensor list">
+      <div class="rail-icons">
+        <button class="rail-icon active" data-rail-tab="filters" title="Filters">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+        </button>
+        <button class="rail-icon" data-rail-tab="list" title="Sensor list">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <button class="rail-icon" data-rail-tab="downloads" title="Downloads">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>
+        </button>
+      </div>
 
-      <div class="section-label stats-label">Network summary</div>
-      <section class="stats">
-        <div class="stat">
-          <strong id="totalCount">0</strong>
-          <span>Total</span>
-        </div>
-        <div class="stat">
-          <strong id="withDataCount">0</strong>
-          <span>With Data</span>
-        </div>
-        <div class="stat">
-          <strong id="withoutDataCount">0</strong>
-          <span>No Data</span>
-        </div>
-        <div class="stat">
-          <strong id="goodQcCount">0</strong>
-          <span>Good QC</span>
-        </div>
-        <div class="stat">
-          <strong id="reviewQcCount">0</strong>
-          <span>Review QC</span>
-        </div>
-        <div class="stat">
-          <strong id="wardSensorCount">0</strong>
-          <span>Wards With Sensors</span>
-        </div>
-        <div class="stat">
-          <strong id="specificCapacityCount">0</strong>
-          <span>Water + Discharge</span>
-        </div>
-      </section>
-      <section class="qc-review-breakdown" id="reviewQcBreakdown" aria-label="Review QC breakdown"></section>
-
-      <section class="filter-summary">
-        <div class="stat">
-          <strong id="filteredCount">0</strong>
-          <span>Filtered Borewells</span>
-        </div>
-        <details class="download-panel">
-          <summary>Downloads and exports</summary>
-          <div class="export-actions">
-            <button id="exportFiltered" class="primary" type="button">Filtered CSV</button>
-            <button id="downloadWeeklyLevelsCsv" type="button">Weekly Levels Excel</button>
-            <button id="downloadNotUsableCsv" type="button">Not Usable Excel</button>
-            <button id="downloadSpecificCapacity" type="button">Specific Capacity Excel</button>
-            <button id="downloadCriticalGroundwater" type="button">Critical GW Excel</button>
-            <button id="downloadCriticalComparison" type="button">Previous 60 Comparison</button>
+      <div class="rail-panel">
+        <!-- Filters tab -->
+        <div class="rail-tab" data-rail-panel="filters">
+          <div class="rail-section">
+            <div class="rail-section-title">Sensor quality</div>
+            <div class="chip-row qc-filter-grid">
+              <button class="chip active" data-qc-filter="" type="button">All</button>
+              <button class="chip" data-qc-filter="GOOD" type="button">Good</button>
+              <button class="chip" data-qc-filter="USABLE_WITH_CAUTION" type="button">Caution</button>
+              <button class="chip" data-qc-filter="POOR" type="button">Poor</button>
+              <button class="chip" data-qc-filter="INSUFFICIENT_DATA" type="button">Low data</button>
+              <button class="chip" data-qc-filter="NO_DATA" type="button">No data</button>
+            </div>
           </div>
-        </details>
-      </section>
 
-      <section id="sensorList" class="list"></section>
+          <div class="rail-section">
+            <div class="rail-section-title">Actions</div>
+            <div class="stack">
+              <button id="fitSensors" class="btn btn-primary">Fit borewells</button>
+              <button id="refreshData" class="btn">Reload data</button>
+              <button id="clearSelection" class="btn" type="button" disabled>Clear selection</button>
+            </div>
+          </div>
+
+          <div class="rail-section" id="sensorQcSection">
+            <div class="rail-section-title">Network summary</div>
+            <div class="mini-stats">
+              <div class="mini-stat"><span id="withDataCount">—</span><label>With data</label></div>
+              <div class="mini-stat"><span id="withoutDataCount">—</span><label>No data</label></div>
+              <div class="mini-stat"><span id="specificCapacityCount">—</span><label>WL + discharge</label></div>
+              <div class="mini-stat"><span id="filteredCount">—</span><label>Filtered</label></div>
+            </div>
+            <div class="qc-review-breakdown" id="reviewQcBreakdown" aria-label="Review QC breakdown"></div>
+          </div>
+
+          <div class="rail-section rail-status">
+            <div class="status-pulse"></div>
+            <p class="rail-status-text" id="refreshStatus">Dashboard uses the latest uploaded KH Excel ZIP data.</p>
+          </div>
+        </div>
+
+        <!-- Sensor list tab -->
+        <div class="rail-tab" data-rail-panel="list" hidden>
+          <div class="rail-section rail-section-flush">
+            <div class="rail-section-title">Borewells</div>
+            <section id="sensorList" class="list"></section>
+            <button id="retryLoadSensorsBtn" class="btn" type="button" hidden>Retry</button>
+          </div>
+        </div>
+
+        <!-- Downloads tab -->
+        <div class="rail-tab" data-rail-panel="downloads" hidden>
+          <div class="rail-section">
+            <div class="rail-section-title">Exports</div>
+            <div class="stack">
+              <button id="exportFiltered" class="btn btn-primary" type="button">Filtered CSV</button>
+              <button id="downloadWeeklyLevelsCsv" class="btn" type="button">Weekly levels (Excel)</button>
+              <button id="downloadNotUsableCsv" class="btn" type="button">Not usable (Excel)</button>
+              <button id="downloadSpecificCapacity" class="btn" type="button">Specific capacity (Excel)</button>
+              <button id="downloadCriticalGroundwater" class="btn" type="button">Critical GW (Excel)</button>
+              <button id="downloadCriticalComparison" class="btn" type="button">Previous 60 comparison</button>
+              <button id="downloadAllRawExcel" class="btn" type="button" hidden>All raw (Excel)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backdrop for click-out on mobile -->
+      <div class="rail-backdrop" id="railBackdrop" hidden></div>
     </aside>
 
-    <section class="map-wrap">
-      <div id="map"></div>
+    <!-- ============================================================
+         MAIN — the map, clean, edge-to-edge.
+         No floating controls beyond the selected-ward chip and
+         the Leaflet zoom + legend controls (styled unobtrusively).
+         ============================================================ -->
+    <main class="stage" role="main">
+      <div id="map" class="stage-map"></div>
+
+      <!-- Stable, non-cursor-following ward label. Updated only on click. -->
+      <div class="selected-chip" id="selectedChip" hidden>
+        <div class="selected-chip-kicker">Selected ward</div>
+        <div class="selected-chip-name" id="selectedChipName">—</div>
+        <button class="selected-chip-close" id="selectedChipClose" aria-label="Clear selection" title="Clear selection">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+
       <div class="method-summary map-analysis-control" id="methodSummary" style="display:none"></div>
       <div id="toast" class="toast"></div>
-    </section>
+    </main>
 
-    <section class="details">
-      <header>
-        <div class="details-title-row">
-          <div>
-            <h2 id="detailTitle">Select a borewell</h2>
-            <p class="subhead" id="detailSubhead">Click a marker or list item to view ward details and time-series charts.</p>
-          </div>
-          <button id="closeDetails" class="details-close" type="button" title="Close details panel" aria-label="Close details panel">Close</button>
+    <!-- ============================================================
+         RIGHT DRAWER — Details panel. Hidden until a ward or
+         borewell is selected. Slides in from the right.
+         ============================================================ -->
+    <aside class="right-drawer" id="rightDrawer" aria-label="Details">
+      <header class="drawer-head">
+        <div class="drawer-title-block">
+          <div class="drawer-kicker">Detail</div>
+          <h2 id="detailTitle">Select a borewell or ward</h2>
+          <p class="drawer-sub" id="detailSubhead">Click a ward on the map or a borewell in the list.</p>
         </div>
+        <button id="closeDetails" class="icon-btn" type="button" aria-label="Close details">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
       </header>
 
-      <div class="details-body">
+      <div class="drawer-body">
+
+        <!-- Ward detail card, populated by qc.js -->
         <section class="ward-detail-panel" id="wardDetailPanel" style="display:none"></section>
 
+        <!-- Sensor detail grid -->
         <section class="detail-grid" id="sensorDetailGrid">
-          <div class="detail"><span>UID</span><strong id="detailUid">-</strong></div>
-          <div class="detail"><span>Ward No</span><strong id="detailWardNo">-</strong></div>
-          <div class="detail"><span>Ward Name</span><strong id="detailWardName">-</strong></div>
-          <div class="detail"><span>Motor HP</span><strong id="detailMotorHp">-</strong></div>
-          <div class="detail"><span>Borewell Depth</span><strong id="detailBorewellDepth">-</strong></div>
-          <div class="detail"><span>Lat / Lon</span><strong id="detailLatLon">-</strong></div>
-          <div class="detail"><span>First Data</span><strong id="detailFirstData">-</strong></div>
-          <div class="detail"><span>Last Data</span><strong id="detailLastData">-</strong></div>
-          <div class="detail"><span>Readings</span><strong id="detailReadings">-</strong></div>
-          <div class="detail"><span>Data Type</span><strong id="detailDataType">-</strong></div>
-          <div class="detail"><span>QC Status</span><strong id="detailQcStatus">-</strong></div>
-          <div class="detail"><span>QC Score</span><strong id="detailQcScore">-</strong></div>
-          <div class="detail"><span>Plot Readiness</span><strong id="detailPlotReadiness">-</strong></div>
-          <div class="detail detail-wide"><span>QC Flags</span><strong id="detailQcFlags">-</strong></div>
+          <div class="detail"><span>UID</span><strong id="detailUid">—</strong></div>
+          <div class="detail"><span>Ward No</span><strong id="detailWardNo">—</strong></div>
+          <div class="detail"><span>Ward Name</span><strong id="detailWardName">—</strong></div>
+          <div class="detail"><span>Motor HP</span><strong id="detailMotorHp">—</strong></div>
+          <div class="detail"><span>Borewell Depth</span><strong id="detailBorewellDepth">—</strong></div>
+          <div class="detail"><span>Lat / Lon</span><strong id="detailLatLon">—</strong></div>
+          <div class="detail"><span>First Data</span><strong id="detailFirstData">—</strong></div>
+          <div class="detail"><span>Last Data</span><strong id="detailLastData">—</strong></div>
+          <div class="detail"><span>Readings</span><strong id="detailReadings">—</strong></div>
+          <div class="detail"><span>Data Type</span><strong id="detailDataType">—</strong></div>
+          <div class="detail"><span>QC Status</span><strong id="detailQcStatus">—</strong></div>
+          <div class="detail"><span>QC Score</span><strong id="detailQcScore">—</strong></div>
+          <div class="detail"><span>Plot Readiness</span><strong id="detailPlotReadiness">—</strong></div>
+          <div class="detail detail-wide"><span>QC Flags</span><strong id="detailQcFlags">—</strong></div>
+          <div class="detail detail-wide"><span>QC Reasons</span><strong id="detailQcReasons">—</strong></div>
         </section>
 
-        <section class="controls" id="sensorExportControls" style="display:none">
-          <div class="button-row">
-            <button id="exportSelected" class="primary" type="button">Export selected CSV</button>
+        <section class="drawer-section" id="sensorExportControls" style="display:none">
+          <div class="stack">
+            <button id="exportSelected" class="btn btn-primary" type="button">Export selected CSV</button>
+            <button id="exportWaterCsv" class="btn" type="button" hidden>Water level CSV</button>
+            <button id="exportDischargeCsv" class="btn" type="button" hidden>Discharge CSV</button>
           </div>
         </section>
 
-        <section id="timeRangeSection" style="display:none">
-          <h2>Time Range</h2>
+        <section id="timeRangeSection" class="drawer-section" style="display:none">
+          <div class="drawer-section-title">Time range</div>
           <div class="range-tabs">
-            <button class="active" data-range="week">Last Week</button>
-            <button data-range="month">Last Month</button>
-            <button data-range="three">3 Months</button>
-            <button data-range="all">All Time</button>
+            <button class="active" data-range="week">Week</button>
+            <button data-range="month">Month</button>
+            <button data-range="three">3 months</button>
+            <button data-range="all">All time</button>
           </div>
         </section>
 
         <section class="chart-box" id="waterChartBox" style="display:none">
           <div class="chart-head">
-            <h2>Water Level Below Surface</h2>
+            <h3>Water level below surface</h3>
             <div class="chart-actions">
-              <button id="toggleGroundwaterOutliers" class="chart-download" type="button" aria-pressed="false">Show outliers</button>
-              <button id="toggleCycleConnector" class="chart-download" type="button" aria-pressed="true">Hide water level path</button>
-              <button class="chart-expand" data-chart-id="waterChart" data-chart-title="Water Level Below Surface" type="button">Expand</button>
-              <button id="downloadWaterChart" class="chart-download" type="button">Download PNG</button>
+              <button id="toggleGroundwaterOutliers" class="chart-btn" type="button" aria-pressed="false">Show outliers</button>
+              <button id="toggleCycleConnector" class="chart-btn" type="button" aria-pressed="true">Hide path</button>
+              <button class="chart-btn chart-expand" data-chart-id="waterChart" data-chart-title="Water Level Below Surface" type="button">Expand</button>
+              <button id="downloadWaterChart" class="chart-btn" type="button">PNG</button>
             </div>
           </div>
           <canvas id="waterChart"></canvas>
@@ -171,40 +238,49 @@
 
         <section class="chart-box" id="dischargeChartBox" style="display:none">
           <div class="chart-head">
-            <h2>Discharge</h2>
+            <h3>Discharge</h3>
             <div class="chart-actions">
-              <button class="chart-expand" data-chart-id="dischargeChart" data-chart-title="Discharge" type="button">Expand</button>
-              <button id="downloadDischargeChart" class="chart-download" type="button">Download PNG</button>
+              <button class="chart-btn chart-expand" data-chart-id="dischargeChart" data-chart-title="Discharge" type="button">Expand</button>
+              <button id="downloadDischargeChart" class="chart-btn" type="button">PNG</button>
             </div>
           </div>
           <canvas id="dischargeChart"></canvas>
           <div id="dischargeEmpty" class="empty-chart" style="display:none">No discharge data is available for this borewell and range.</div>
         </section>
       </div>
-    </section>
-  </main>
+    </aside>
 
+    <!-- Drawer scrim (mobile) -->
+    <div class="drawer-scrim" id="drawerScrim" hidden></div>
+
+    <!-- Legacy toggle right button (kept as hidden alias for compat) -->
+    <button id="toggleRight" hidden aria-hidden="true"></button>
+  </div>
+
+  <!-- ============================================================
+       FULLSCREEN CHART MODAL (preserved)
+       ============================================================ -->
   <div class="chart-fullscreen" id="chartFullscreen" aria-hidden="true">
-      <div class="chart-fullscreen-panel">
-        <div class="chart-fullscreen-head">
-          <h2 id="chartFullscreenTitle">Chart</h2>
-          <button id="chartFullscreenClose" type="button">Close</button>
-        </div>
-        <div class="chart-fullscreen-controls" id="chartFullscreenControls" style="display:none"></div>
-        <canvas id="chartFullscreenCanvas"></canvas>
+    <div class="chart-fullscreen-panel">
+      <div class="chart-fullscreen-head">
+        <h2 id="chartFullscreenTitle">Chart</h2>
+        <button id="chartFullscreenClose" type="button">Close</button>
       </div>
+      <div class="chart-fullscreen-controls" id="chartFullscreenControls" style="display:none"></div>
+      <canvas id="chartFullscreenCanvas"></canvas>
+    </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/shpjs@latest/dist/shp.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- Dashboard Application Modules -->
-  <script src="js/config.js?v=kh-cycles-20260831"></script>
-  <script src="js/state.js?v=kh-refresh-disabled-20260831"></script>
-  <script src="js/qc.js?v=kh-refresh-disabled-20260831"></script>
-  <script src="js/utils.js?v=kh-refresh-disabled-20260831"></script>
-  <script src="js/api.js?v=kh-cycles-20260831"></script>
-  <script src="js/charts.js?v=kh-cycles-20260831"></script>
-  <script src="js/app.js?v=kh-refresh-disabled-20260831"></script>
+  <script src="js/config.js?v=redesign-2026-09-10"></script>
+  <script src="js/state.js?v=redesign-2026-09-10"></script>
+  <script src="js/qc.js?v=redesign-2026-09-10"></script>
+  <script src="js/utils.js?v=redesign-2026-09-10"></script>
+  <script src="js/api.js?v=redesign-2026-09-10"></script>
+  <script src="js/charts.js?v=redesign-2026-09-10"></script>
+  <script src="js/app.js?v=redesign-2026-09-10"></script>
+  <script src="js/shell.js?v=redesign-2026-09-10" defer></script>
 </body>
 </html>

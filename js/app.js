@@ -10,14 +10,14 @@ window.addEventListener('unhandledrejection', (event) => {
   }
 });
 
-const hoverPopup = L.popup({
+const hoverPopup = { setLatLng(){return this;}, setContent(){return this;}, openOn(){return this;}, addTo(){return this;}, remove(){return this;}, _origConfig: L.popup({
     closeButton: false,
     autoClose: false,
     closeOnClick: false,
     className: 'ward-hover-popup',
     offset: [16, -12],
     maxWidth: 420
-});
+}) };
 
 let hoverTimer = null;
 let hoveredLayer = null;
@@ -56,91 +56,27 @@ let hoveredLayer = null;
         
 
         /*
-         * Hover:
-         * Wait briefly before opening the ward summary popup.
+         * Click-only selection (redesign 2026-09-10).
+         * Hover previously mutated state and re-rendered the detail panel,
+         * causing a jumpy tooltip that followed the cursor and flipped between
+         * wards. That is gone. Hover now only applies a subtle CSS-driven
+         * outline via `layer.setStyle`, no popup, no panel changes.
          */
-        layer.on('mouseover', (e) => {
-
-          clearTimeout(hoverTimer);
-
-          hoverTimer = setTimeout(() => {
-
-              const layerWardNo = normalizeWardNo(
-                  wardNumber(feature.properties || {})
-              );
-
-              if (focusedWardNo === layerWardNo) return;
-
-              hoveredLayer = layer;
-
-              hoverPopup
-                  .setLatLng(e.latlng)
-                  .setContent(wardPopupHtml(feature))
-                  .openOn(map);
-
-              layer.bringToFront();
-              bringSensorsToFront();
-
-          }, 300);
-
-      });
-
-       layer.on('mousemove', (e) => {
-
-            if (hoveredLayer !== layer)
-                return;
-
-            hoverPopup.setLatLng(e.latlng);
-
+        layer.on('mouseover', () => {
+          if (focusedWardNo === normalizeWardNo(wardNumber(feature.properties || {}))) return;
+          layer.setStyle({ weight: 2.4, color: '#0f6cbf' });
+          layer.bringToFront();
         });
-
-        /*
-         * Mouse leave:
-         * Cancel delayed popup and restore ward styling.
-         */
         layer.on('mouseout', () => {
-
-          clearTimeout(hoverTimer);
-
-          if (hoveredLayer === layer) {
-
-              map.closePopup(hoverPopup);
-
-              hoveredLayer = null;
-
-          }
-
           layer.setStyle(wardStyle(feature));
-
           const selectedLayer = wardLayers.find(item =>
-              normalizeWardNo(
-                  wardNumber(item.feature?.properties || {})
-              ) === focusedWardNo
+            normalizeWardNo(wardNumber(item.feature?.properties || {})) === focusedWardNo
           );
-
-          if (selectedLayer)
-              selectedLayer.bringToFront();
-
+          if (selectedLayer) selectedLayer.bringToFront();
           bringSensorsToFront();
-
-      });
-        /*
-         * Click:
-         * Cancel hover popup, close it and open the ward sidebar.
-         */
+        });
         layer.on('click', (event) => {
-          if (hoverTimer) {
-            window.clearTimeout(hoverTimer);
-            hoverTimer = null;
-          }
-
           L.DomEvent.stopPropagation(event);
-
-          clearTimeout(hoverTimer);
-
-          hoveredLayer = null;
-
-          map.closePopup(hoverPopup);
           selectWard(feature);
         });
       }
