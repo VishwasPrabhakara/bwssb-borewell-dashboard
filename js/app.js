@@ -591,7 +591,7 @@ let hoveredLayer = null;
       }
     };
 
-    const legend = L.control({ position: 'topright' });
+    const legend = L.control({ position: 'bottomleft' });
     legend.onAdd = () => {
       const div = L.DomUtil.create('div', 'legend');
       L.DomEvent.disableClickPropagation(div);

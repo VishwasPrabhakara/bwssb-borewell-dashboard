@@ -893,3 +893,28 @@ canvas#waterChart, canvas#dischargeChart { max-height: 260px; width: 100%; }
 .leaflet-marker-icon.sensor-marker-hollow {
   filter: grayscale(.6) opacity(.7);
 }
+
+
+/* ---------- Sensor markers (restored: pins were invisible in redesign) --- */
+.marker-pin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(15,23,42,.35), 0 0 0 1px rgba(15,23,42,.06);
+  transition: opacity 120ms ease, transform 120ms ease;
+  box-sizing: border-box;
+}
+.marker-pin.dimmed {
+  opacity: 0.28;
+  transform: scale(0.82);
+}
+.marker-pin.hollow {
+  background: transparent !important;
+  border: 2px solid #64748b;
+}
+.leaflet-marker-icon:hover .marker-pin { transform: scale(1.15); }
+
+/* Analysis-lens popover: move to top-left, more compact so it doesn't fight the map */
+.method-summary { max-width: 320px; padding: 10px 12px; font-size: 12px; }
+.method-summary select { max-width: 260px; }
