@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - Main Map Lifecycle & UI Controller
+   BWSSB Borewell Dashboard - Main Map Lifecycle & UI Controller
    ========================================================================== */
 
 // Global Unhandled Promise Rejection Handler for Application Resiliency

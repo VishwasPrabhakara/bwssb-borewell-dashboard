@@ -1,12 +1,12 @@
-# Project Overview: BBMP Borewell Dashboard
+# Project Overview: BWSSB Borewell Dashboard
 
-This document provides a comprehensive technical overview of the **BBMP Borewell Dashboard** repository. It covers the system architecture, file structure, analytical lenses, data processing workflows, quality control pipelines, and deployment procedures.
+This document provides a comprehensive technical overview of the **BWSSB Borewell Dashboard** repository. It covers the system architecture, file structure, analytical lenses, data processing workflows, quality control pipelines, and deployment procedures.
 
 ---
 
 ## 1. Executive Summary
 
-The **BBMP Borewell Dashboard** is a client-side, single-page web application designed for interactive geospatial visualization, data quality assessment, and trend analysis of telemetry sensors fitted on municipal borewells across Bruhat Bengaluru Mahanagara Palike (BBMP) wards in Bengaluru, India.
+The **BWSSB Borewell Dashboard** is a client-side, single-page web application designed for interactive geospatial visualization, data quality assessment, and trend analysis of telemetry sensors fitted on municipal borewells across Bruhat Bengaluru Mahanagara Palike (BBMP) wards in Bengaluru, India.
 
 Key operational capabilities:
 - **Geospatial Analytics**: Interactive Leaflet basemap rendering 200+ BBMP ward boundaries (`bbmpwards.zip`) and Bengaluru lake bodies (`Lakes_final.zip`) with spatial point-in-polygon sensor matching performed client-side.

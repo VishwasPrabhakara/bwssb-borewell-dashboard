@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - Chart.js Visualization Engine & Fullscreen Handler
+   BWSSB Borewell Dashboard - Chart.js Visualization Engine & Fullscreen Handler
    ========================================================================== */
 
     const renderWardLineChart = (canvas, labels, datasets, options = {}) => {

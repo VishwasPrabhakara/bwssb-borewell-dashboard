@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - Configuration & Security Settings
+   BWSSB Borewell Dashboard - Configuration & Security Settings
    ========================================================================== */
 
 /**
@@ -35,5 +35,5 @@ const SPECIFIC_CAPACITY_API_VERSION = 'sc-kh-cycles-20260831-1';
 const PUMPING_PERFORMANCE_API_VERSION = 'pump-kh-cycles-20260831-1';
 const bangaloreCenter = [12.9716, 77.5946];
 
-console.log('%c BBMP Borewell Dashboard ', 'background: #1d4ed8; color: #ffffff; font-weight: bold; padding: 4px 8px; border-radius: 4px;', 'Loaded modular build v2026.08.05');
+console.log('%c BWSSB Borewell Dashboard ', 'background: #1d4ed8; color: #ffffff; font-weight: bold; padding: 4px 8px; border-radius: 4px;', 'Loaded modular build v2026.08.05');
 

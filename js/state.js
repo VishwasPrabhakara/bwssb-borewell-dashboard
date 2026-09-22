@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - Global Application State & DOM Cache
+   BWSSB Borewell Dashboard - Global Application State & DOM Cache
    ========================================================================== */
 
 let wardLayerMode = 'qc';

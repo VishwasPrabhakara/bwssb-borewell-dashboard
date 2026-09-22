@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - REST API Data Fetching & Sync Services
+   BWSSB Borewell Dashboard - REST API Data Fetching & Sync Services
    ========================================================================== */
 
     const fetchJsonWithRetry = async (url, fallback, retries = 1) => {

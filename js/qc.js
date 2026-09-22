@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - Quality Control Scoring & Ward Analytics Lenses
+   BWSSB Borewell Dashboard - Quality Control Scoring & Ward Analytics Lenses
    ========================================================================== */
 
     const scaledSpecificCapacity = (scaledValue, rawValue) => {
@@ -2333,7 +2333,7 @@ function runDashboardAudit() {
     console.clear();
 
     console.log("==========================================================");
-    console.log("           BBMP BOREWELL DASHBOARD AUDIT");
+    console.log("           BWSSB BOREWELL DASHBOARD AUDIT");
     console.log("==========================================================");
 
     const summary = {

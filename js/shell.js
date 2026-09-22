@@ -1,5 +1,5 @@
 /* ============================================================================
-   BBMP Borewell Dashboard - Shell wiring (redesign 2026-09-10 rev 2)
+   BWSSB Borewell Dashboard - Shell wiring (redesign 2026-09-10 rev 2)
    ============================================================================ */
 (function () {
   'use strict';

@@ -1,4 +1,4 @@
-# BBMP Borewell Dashboard
+# BWSSB Borewell Dashboard
 
 Static GitHub Pages frontend for visualizing Bengaluru borewell sensors on an OpenStreetMap basemap with BBMP ward boundaries, water-level trends, discharge trends, and data-availability filters.
 

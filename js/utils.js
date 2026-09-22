@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BBMP Borewell Dashboard - Utilities, Normalizers & Toast Notifications
+   BWSSB Borewell Dashboard - Utilities, Normalizers & Toast Notifications
    ========================================================================== */
 
     const sourceQuery = () => `source=${encodeURIComponent(currentDataSource)}`;
@@ -1128,7 +1128,7 @@
       const query = els.search.value.trim() ? 'search' : '';
       const label = [legendFilter || 'all', query].filter(Boolean).join('_');
       link.href = URL.createObjectURL(blob);
-      link.download = `bbmp_borewells_${label}_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.download = `bwssb_borewells_${label}_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.append(link);
       link.click();
       URL.revokeObjectURL(link.href);
@@ -1189,7 +1189,7 @@
       const link = document.createElement('a');
       const safeUid = String(selectedSensor.uid).replace(/[^a-z0-9_-]+/gi, '_');
       link.href = URL.createObjectURL(blob);
-      link.download = `bbmp_borewell_${safeUid}_${new Date().toISOString().slice(0, 10)}.csv`;
+      link.download = `bwssb_borewell_${safeUid}_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.append(link);
       link.click();
       URL.revokeObjectURL(link.href);
@@ -1215,7 +1215,7 @@
       const safeRange = String(selectedRange).replace(/[^a-z0-9_-]+/gi, '_');
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
-      link.download = `bbmp_${label}_${safeUid}_${safeRange}_${new Date().toISOString().slice(0, 10)}.png`;
+      link.download = `bwssb_${label}_${safeUid}_${safeRange}_${new Date().toISOString().slice(0, 10)}.png`;
       document.body.append(link);
       link.click();
       link.remove();
